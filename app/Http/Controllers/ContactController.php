@@ -2,65 +2,78 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-
     public function index()
     {
         $contacts = Contact::get();
 
-        return response()->json([
-            'message' => 'This is all your contact',
-            'data' => ContactResource::collection($contacts)
-        ]);
+        return view('contact.index', compact('contacts'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function create()
+    {
+        $contact = new Contact();
+
+        return view('contact.create', compact('contact'));
+    }
+
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'contact' => 'required',
+            'link' => 'required',
+            'icon' => 'required',
+        ]);
+
+        try {
+            Contact::create($request->all());
+
+            return redirect()->route('contacts.index')->with('success', 'Your contact was created');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\Http\Response
-     */
     public function show(Contact $contact)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\Http\Response
-     */
+    public function edit(Contact $contact)
+    {
+        return view('contact.edit', compact('contact'));
+    }
+
     public function update(Request $request, Contact $contact)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'contact' => 'required',
+            'link' => 'required',
+            'icon' => 'required',
+        ]);
+
+        try {
+            $contact->update($request->all());
+
+            return redirect()->route('contacts.index')->with('success', 'Your contact was updated');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Contact $contact)
     {
-        //
+        try {
+            $contact->delete();
+
+            return redirect()->route('contacts.index')->with('success', 'Your contact was deleted');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 }

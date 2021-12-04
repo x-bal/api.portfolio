@@ -17,8 +17,9 @@ class ProjectResource extends JsonResource
         return [
             'name' => $this->name,
             'description' => $this->description,
-            'thumbnail' => $this->thumbnail,
+            'thumbnail' => asset('storage/' . $this->thumbnail),
             'link' => $this->link,
+            'tags' => $this->tags
         ];
     }
 }

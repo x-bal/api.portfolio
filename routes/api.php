@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\SkillController;
+use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\SkillController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('profile', ProfileController::class);
-Route::apiResource('projects', ProjectController::class);
-Route::apiResource('skills', SkillController::class);
-Route::apiResource('contacts', ContactController::class);
+Route::get('profile', [ProfileController::class, 'index']);
+Route::get('projects', [ProjectController::class, 'index']);
+Route::get('skills', [SkillController::class, 'index']);
+Route::get('contacts', [ContactController::class, 'index']);

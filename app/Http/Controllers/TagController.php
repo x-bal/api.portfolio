@@ -4,61 +4,76 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $tags = Tag::get();
+
+        return view('tag.index', compact('tags'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function create()
+    {
+        $tag = new Tag();
+
+        return view('tag.create', compact('tag'));
+    }
+
     public function store(Request $request)
     {
-        //
+        $request->validate(['name' => 'required']);
+
+        try {
+            Tag::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            return redirect()->route('tags.index')->with('success', 'Your tag was created');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function show(Tag $tag)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Tag $tag)
+    public function edit(Tag $tag)
     {
-        //
+        return view('tag.edit', compact('tag'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
+
+    public function update(Request $request, Tag $tag)
+    {
+        $request->validate(['name' => 'required']);
+
+        try {
+            $tag->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            return redirect()->route('tags.index')->with('success', 'Your tag was updated');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
     public function destroy(Tag $tag)
     {
-        //
+        try {
+            $tag->projects()->detach();
+            $tag->delete();
+
+            return redirect()->route('tags.index')->with('success', 'Your tag was deleted');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 }

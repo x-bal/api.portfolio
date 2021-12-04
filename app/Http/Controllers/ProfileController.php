@@ -2,62 +2,95 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ProfileResource;
 use App\Models\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
     public function index()
     {
-        $profile = Profile::first();
+        $profiles = Profile::get();
 
-        return response()->json([
-            'message' => 'This is your Profile',
-            'data' => new ProfileResource($profile)
-        ]);
+        return view('profile.index', compact('profiles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function create()
+    {
+        $profile = new Profile();
+
+        return view('profile.create', compact('profile'));
+    }
+
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'full_name' => 'required',
+            'role' => 'required',
+            'about' => 'required',
+            'image' => 'required',
+            'image*' => 'mimes:png, jpg, jpeg, svg, gif',
+        ]);
+
+        try {
+            $image = $request->file('image');
+            $imageUrl = $image->storeAs('profile', Str::slug($request->full_name) . '.' . $image->extension());
+
+            Profile::create([
+                'full_name' => $request->full_name,
+                'role' => $request->role,
+                'about' => $request->about,
+                'image' => $imageUrl,
+            ]);
+
+            return redirect()->route('profile.index')->with('success', 'Your profile was created');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Profile  $profile
-     * @return \Illuminate\Http\Response
-     */
     public function show(Profile $profile)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Profile  $profile
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Profile $profile)
+    public function edit(Profile $profile)
     {
-        //
+        return view('profile.edit', compact('profile'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Profile  $profile
-     * @return \Illuminate\Http\Response
-     */
+    public function update(Request $request, Profile $profile)
+    {
+        $request->validate([
+            'full_name' => 'required',
+            'role' => 'required',
+            'about' => 'required',
+            'image*' => 'mimes:png, jpg, jpeg, svg, gif',
+        ]);
+
+        try {
+            if ($request->file('image')) {
+                Storage::delete($profile->image);
+                $image = $request->file('image');
+                $imageUrl = $image->storeAs('profile', Str::slug($request->full_name) . '.' . $image->extension());
+            } else {
+                $imageUrl = $profile->image;
+            }
+
+            $profile->update([
+                'full_name' => $request->full_name,
+                'role' => $request->role,
+                'about' => $request->about,
+                'image' => $imageUrl,
+            ]);
+
+            return redirect()->route('profile.index')->with('success', 'Your profile was updated');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
     public function destroy(Profile $profile)
     {
         //
