@@ -20,14 +20,17 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+Route::view('/', 'auth.login');
 
-Auth::routes();
+Auth::routes([
+    'register' => false,
+    'reset' => false
+]);
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/my-profile', [DashboardController::class, 'profile'])->name('myprofile');
+    Route::post('/my-profile/{user:id}', [DashboardController::class, 'updateProfile'])->name('my-profile');
 
     Route::resource('/profile', ProfileController::class);
     Route::resource('/projects', ProjectController::class);
