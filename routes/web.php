@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TagController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,6 +22,13 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::view('/', 'auth.login');
+
+Route::get('/init', function () {
+    shell_exec('composer install');
+    Artisan::call('migrate');
+    Artisan::call('db:seed');
+    Artisan::call('key:generate');
+});
 
 Auth::routes([
     'register' => false,
