@@ -33,7 +33,7 @@
                                     <span class="badge bg-secondary">{{ $tag->name }}</span>
                                     @endforeach
                                 </td>
-                                <td><img src="{{ asset('storage/' . $project->thumbnail) }}" alt="" width="100px"></td>
+                                <td><img src="{{ public_path($project->image) }}" alt="" width="100px"></td>
                                 <td>
                                     <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
                                 </td>
