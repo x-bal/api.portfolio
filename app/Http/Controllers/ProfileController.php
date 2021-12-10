@@ -30,7 +30,7 @@ class ProfileController extends Controller
             'role' => 'required',
             'about' => 'required',
             'image' => 'required',
-            'image*' => 'mimes:png, jpg, jpeg, svg, gif',
+            'image.*' => 'mimes:png, jpg, jpeg, svg, gif',
         ]);
 
         try {
