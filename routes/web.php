@@ -25,9 +25,11 @@ Route::view('/', 'auth.login');
 
 Route::get('/init', function () {
     shell_exec('composer install');
-    Artisan::call('migrate');
+    shell_exec('cp .env.example .env');
+    Artisan::call('migrate:fresh');
     Artisan::call('db:seed');
     Artisan::call('key:generate');
+    Artisan::call('storage:link');
 });
 
 Auth::routes([
