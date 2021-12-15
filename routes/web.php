@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TagController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,14 +21,26 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
+Route::view('/', 'auth.login');
+
+Route::get('/init', function () {
+    shell_exec('composer install');
+    shell_exec('cp .env.example .env');
+    Artisan::call('migrate:fresh');
+    Artisan::call('db:seed');
+    Artisan::call('key:generate');
+    Artisan::call('storage:link');
 });
 
-Auth::routes();
+Auth::routes([
+    'register' => false,
+    'reset' => false
+]);
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/my-profile', [DashboardController::class, 'profile'])->name('myprofile');
+    Route::post('/my-profile/{user:id}', [DashboardController::class, 'updateProfile'])->name('my-profile');
 
     Route::resource('/profile', ProfileController::class);
     Route::resource('/projects', ProjectController::class);

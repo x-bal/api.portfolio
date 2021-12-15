@@ -25,7 +25,7 @@
                             @foreach($skills as $skill)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td><img src="{{ asset('storage/' . $skill->logo) }}" alt="" width="70px"></td>
+                                <td><img src="{{ asset('files/' . $skill->logo) }}" alt="" width="70px"></td>
                                 <td>{{ $skill->name }}</td>
                                 <td>{{ $skill->experience }}</td>
                                 <td>
