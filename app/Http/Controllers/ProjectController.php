@@ -39,7 +39,7 @@ class ProjectController extends Controller
                 $thumbnail = $request->file('thumbnail');
                 $thumbnailUrl = $thumbnail->storeAs('projects', Str::slug($request->name) . '.' . $thumbnail->extension());
             } else {
-                $thumbnailUrl = 'files/projects/coming-soon.png';
+                $thumbnailUrl = 'projects/coming-soon.png';
             }
 
             $project = Project::create([
