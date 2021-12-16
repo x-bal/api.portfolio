@@ -31,12 +31,16 @@ class ProjectController extends Controller
             'name' => 'required',
             'description' => 'required',
             'tags' => 'required',
-            'thumbnail' => 'required|mimes:png, jpg, jpeg, svg, gif',
+            'thumbnail' => 'mimes:png, jpg, jpeg, svg, gif',
         ]);
 
         try {
-            $thumbnail = $request->file('thumbnail');
-            $thumbnailUrl = $thumbnail->storeAs('projects', Str::slug($request->name) . '.' . $thumbnail->extension());
+            if ($request->file('thumbnail')) {
+                $thumbnail = $request->file('thumbnail');
+                $thumbnailUrl = $thumbnail->storeAs('projects', Str::slug($request->name) . '.' . $thumbnail->extension());
+            } else {
+                $thumbnailUrl = 'files/projects/coming-soon.png';
+            }
 
             $project = Project::create([
                 'name' => $request->name,
