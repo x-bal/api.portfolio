@@ -29,7 +29,7 @@ class SkillController extends Controller
             'name' => 'required',
             'experience' => 'required',
             'logo' => 'required',
-            'logo.*' => 'mimes:jpg, jpeg, png, svg, gif',
+            'logo' => 'mimes:jpg,jpeg,png,svg,gif',
         ]);
 
         try {
@@ -64,7 +64,7 @@ class SkillController extends Controller
             'name' => 'required',
             'experience' => 'required',
             'logo' => 'required',
-            'logo.*' => 'mimes:jpg, jpeg, png, svg, gif',
+            'logo.*' => 'mimes:jpg,jpeg,png,svg,gif',
         ]);
 
         try {

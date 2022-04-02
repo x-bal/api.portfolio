@@ -31,7 +31,7 @@ class ProjectController extends Controller
             'name' => 'required',
             'description' => 'required',
             'tags' => 'required',
-            'thumbnail' => 'mimes:png, jpg, jpeg, svg, gif',
+            'thumbnail' => 'mimes:png,jpg, peg,svg,gif',
         ]);
 
         try {
@@ -76,7 +76,7 @@ class ProjectController extends Controller
             'name' => 'required',
             'description' => 'required',
             'tags' => 'required',
-            'thumbnail' => 'mimes:png, jpg, jpeg, svg, gif',
+            'thumbnail' => 'mimes:png,jpg,jpeg,svg,gif',
         ]);
 
         try {
