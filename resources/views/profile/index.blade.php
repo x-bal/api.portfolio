@@ -29,7 +29,7 @@
                                 <td>{{ $profile->full_name }}</td>
                                 <td>{{ $profile->role }}</td>
                                 <td>{{ $profile->about }}</td>
-                                <td><img src="{{ asset('files/' . $profile->image) }}" alt="" width="100px"></td>
+                                <td><img src="{{ asset('storage/' . $profile->image) }}" alt="" width="100px"></td>
                                 <td>
                                     <a href="{{ route('profile.edit', $profile->id) }}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
                                 </td>
