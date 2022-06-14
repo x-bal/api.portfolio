@@ -16,7 +16,7 @@ class SkillResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'experience' => $this->experience . ' of experience.',
+            'experience' => $this->experience,
             'logo' => asset('storage/' . $this->logo),
         ];
     }
